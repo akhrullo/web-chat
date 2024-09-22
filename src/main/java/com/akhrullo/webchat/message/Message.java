@@ -3,12 +3,22 @@ package com.akhrullo.webchat.message;
 import com.akhrullo.webchat.chat.Chat;
 import com.akhrullo.webchat.model.audit.AuditingEntity;
 import com.akhrullo.webchat.user.User;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Class {@code } presents ...
+ * The {@code Message} class represents a message entity in the chat application.
+ * It extends {@code AuditingEntity} to inherit auditing capabilities such as
+ * creation and modification timestamps.
  *
  * @author Akhrullo Ibrokhimov
  * @version 1.0
@@ -20,17 +30,22 @@ import lombok.Setter;
 public class Message extends AuditingEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String content;
+
     private String image;
 
-    @ManyToOne
-    private User user;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_id", nullable = false)
+    private User sender;
 
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_id", nullable = false)
     private Chat chat;
+
+    private boolean isRead;
 
     @Version
     private Long version;

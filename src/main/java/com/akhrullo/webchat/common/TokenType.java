@@ -1,7 +1,7 @@
 package com.akhrullo.webchat.common;
 
 /**
- * Class {@code } presents ...
+ * The {@code TokenType} enum defines the types of tokens used for authentication.
  *
  * @author Akhrullo Ibrokhimov
  * @version 1.0
