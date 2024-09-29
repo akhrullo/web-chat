@@ -4,6 +4,7 @@ import com.akhrullo.webchat.chat.Chat;
 import com.akhrullo.webchat.model.audit.AuditingEntity;
 import com.akhrullo.webchat.user.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,6 +34,7 @@ public class Message extends AuditingEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
     private String image;

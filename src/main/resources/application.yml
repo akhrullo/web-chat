@@ -23,3 +23,5 @@ application:
       expiration: 86400000 # a day
       refresh-token:
         expiration: 604800000 # 7 days
+aes:
+  master-key: "mZD7aRjBq+XlVcU5UBfz8LFIDWmD+GrIel6G2pFFxM0="

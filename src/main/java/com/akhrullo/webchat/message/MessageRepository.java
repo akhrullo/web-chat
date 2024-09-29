@@ -16,7 +16,7 @@ import java.util.List;
  * @version 1.0
  */
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    @Query("SELECT m FROM Message m WHERE m.chat.id = :chatId AND m.user.id = :userId AND m.isRead = false")
+    @Query("SELECT m FROM Message m WHERE m.chat.id = :chatId AND m.sender.id = :userId AND m.isRead = false")
     List<Message> findUnreadMessagesByChatIdAndUserId(@Param("chatId") Long chatId, @Param("userId") Long userId);
 
     Page<Message> findByChatId(Long chatId, Pageable pageable);

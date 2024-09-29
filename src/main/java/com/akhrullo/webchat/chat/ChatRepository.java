@@ -17,4 +17,7 @@ import java.util.Optional;
 public interface ChatRepository extends JpaRepository<Chat, Long> {
     @Query("SELECT c FROM Chat c WHERE c.type = 'PRIVATE' AND :user1 MEMBER OF c.users AND :user2 MEMBER OF c.users")
     Optional<Chat> findPrivateChatBetweenUsers(@Param("user1") User user1, @Param("user2") User user2);
+
+    @Query("SELECT c FROM Chat c WHERE c.id = :chatId AND :user MEMBER OF c.users")
+    Optional<Chat> findByIdAndUser(@Param("chatId") Long chatId, @Param("user") User user);
 }

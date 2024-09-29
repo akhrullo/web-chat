@@ -32,7 +32,8 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Chat findChatById(Long id) {
-        return repository.findById(id)
+        User user = SessionContext.getCurrentUser();
+        return repository.findByIdAndUser(id, user)
                 .orElseThrow(WebChatApiException::chatNotFoundException);
     }
 
@@ -77,6 +78,4 @@ public class ChatServiceImpl implements ChatService {
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }
-
-
 }
