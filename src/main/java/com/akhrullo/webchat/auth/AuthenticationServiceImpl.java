@@ -6,6 +6,7 @@ import com.akhrullo.webchat.common.UserRole;
 import com.akhrullo.webchat.common.UserState;
 import com.akhrullo.webchat.config.CustomUserDetails;
 import com.akhrullo.webchat.config.JwtService;
+import com.akhrullo.webchat.encryption.keymanagement.KeyManagementService;
 import com.akhrullo.webchat.token.Token;
 import com.akhrullo.webchat.user.User;
 import com.akhrullo.webchat.exception.WebChatApiException;
@@ -19,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,9 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Class {@code } presents ...
+ * Implementation of the {@link AuthenticationService} interface.
+ * Provides methods for user registration, authentication, token generation, and refresh.
+ * Handles token management and key management for users.
  *
  * @author Akhrullo Ibrokhimov
  * @version 1.0
@@ -36,10 +38,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
-    private final UserRepository repository;
-    private final TokenRepository tokenRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenRepository tokenRepository;
+    private final KeyManagementService keyManagementService;
     private final AuthenticationManager authenticationManager;
 
     @Override
@@ -51,6 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String refreshToken = jwtService.generateRefreshToken(savedUser);
 
         saveUserToken(savedUser, jwtToken);
+        keyManagementService.generateAndStoreKeysForUser(savedUser);
 
         return buildAuthResponse(jwtToken, refreshToken);
     }
