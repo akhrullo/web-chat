@@ -2,8 +2,8 @@ package com.akhrullo.webchat.encryption.keymanagement;
 
 import com.akhrullo.webchat.exception.WebChatApiException;
 import com.akhrullo.webchat.user.User;
-import com.akhrullo.webchat.user.UserKeys;
-import com.akhrullo.webchat.user.UserKeysRepository;
+import com.akhrullo.webchat.user.key.UserKeys;
+import com.akhrullo.webchat.user.key.UserKeysRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

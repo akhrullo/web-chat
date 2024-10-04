@@ -1,6 +1,7 @@
-package com.akhrullo.webchat.user;
+package com.akhrullo.webchat.user.key;
 
 import com.akhrullo.webchat.model.audit.AuditingEntity;
+import com.akhrullo.webchat.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
