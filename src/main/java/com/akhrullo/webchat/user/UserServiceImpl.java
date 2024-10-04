@@ -5,6 +5,8 @@ import com.akhrullo.webchat.user.dto.UserDto;
 import com.akhrullo.webchat.user.dto.UserUpdateDto;
 import com.akhrullo.webchat.exception.WebChatApiException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,12 +19,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserById(Long id){
         return repository.findById(id)
-                .orElseThrow(WebChatApiException::userNotFoundException);
-    }
-
-    @Override
-    public User findUserByJwt(String jwt) {
-        return repository.findByEmail(jwt)
                 .orElseThrow(WebChatApiException::userNotFoundException);
     }
 
@@ -40,5 +36,18 @@ public class UserServiceImpl implements UserService {
         repository.save(user);
 
         return mapper.toDto(user);
+    }
+
+    @Override
+    public Page<UserDto> searchUsers(String searchTerm, Pageable pageable) {
+        User currentUser = SessionContext.getCurrentUser();
+        Page<User> users = repository.findUsersByEmailExcludingCurrentUser
+                (
+                        searchTerm,
+                        currentUser.getId(),
+                        pageable
+                );
+
+        return users.map(mapper::toDto);
     }
 }

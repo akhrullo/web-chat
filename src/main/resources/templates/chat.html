@@ -10,7 +10,11 @@
 <div id="root">
     <div class="app__container">
         <div class="sidebar">
-            <div class="sidebar__header">Contacts</div>
+            <div class="sidebar__header">Personal</div>
+            <div class="search__bar">
+            <label for="searchInput" class="search__label"></label>
+            <input type="text" class="search__input" placeholder="Search..." id="searchInput"/>
+            </div>
             <div class="contacts__list" id="contactsList">
                 <!-- Contacts will be dynamically loaded here -->
             </div>
@@ -56,6 +60,7 @@
         await loadChats();
 
         // Event listeners
+        document.getElementById('searchInput').addEventListener('input', searchUsers);
         document.getElementById('sendButton').addEventListener('click', sendMessage);
         document.getElementById('addContactButton').addEventListener('click', addContact);
         document.getElementById('editContactButton').addEventListener('click', editContact);
@@ -80,6 +85,75 @@
                 displayChats(chats);
             } catch (error) {
                 console.error('Error loading chats:', error);
+                handleRequestError();
+            }
+        }
+
+        async function searchUsers() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            if (!searchTerm) {
+                await loadChats();
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/v1/users/search?search_term=${searchTerm}&page=0&size=10`, {
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to search users');
+                const users = await response.json();
+                console.log(users)
+                displaySearchResults(users.content);
+            } catch (error) {
+                console.error('Error searching users:', error);
+                handleRequestError();
+            }
+        }
+
+        function displaySearchResults(users) {
+            const contactsList = document.getElementById('contactsList');
+            contactsList.innerHTML = '';
+            users.forEach(user => {
+                const searchResultItem = document.createElement('div');
+                searchResultItem.classList.add('search-result-item');
+
+                // Container for the search-result details
+                const searchResultDetails = document.createElement('div');
+                searchResultDetails.classList.add('search-result-details');
+
+                // Firstname and lastname (compact and bold)
+                const userName = document.createElement('div');
+                userName.classList.add('search-result-name');
+                userName.textContent = `${user.firstname} ${user.lastname}`;
+
+                // Email in smaller, muted font below the name
+                const userEmail = document.createElement('div');
+                userEmail.classList.add('search-result-email');
+                userEmail.textContent = user.email;
+
+                // Append the name and email to the contact details container
+                searchResultDetails.appendChild(userName);
+                searchResultDetails.appendChild(userEmail);
+
+                // Append the details to the contact item
+                searchResultItem.appendChild(searchResultDetails);
+                searchResultItem.addEventListener('click', () => createChat(user.id));
+                contactsList.appendChild(searchResultItem);
+            });
+        }
+
+        async function createChat(userId) {
+            try {
+                const response = await fetch(`/api/v1/chats/private?partner_id=${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`}
+                });
+                if (!response.ok) throw new Error('Failed to create chat');
+                const chat = await response.json();
+                await loadChat(chat.id);
+            } catch (error) {
+                console.error('Error creating chat:', error);
                 handleRequestError();
             }
         }

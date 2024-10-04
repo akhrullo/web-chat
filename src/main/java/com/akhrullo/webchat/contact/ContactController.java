@@ -47,7 +47,7 @@ public class ContactController {
     }
 
     /**
-     * Searches for contacts based on the owner ID and search term.
+     * Searches for contacts based search term.
      *
      * @param searchTerm the term to search contacts by name or associated user email
      * @param page the page number for pagination
@@ -57,8 +57,8 @@ public class ContactController {
     @GetMapping
     public ResponseEntity<Page<ContactDto>> searchContacts(
             @RequestParam("search_term") String searchTerm,
-            @RequestParam int page,
-            @RequestParam int size
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ContactDto> contactPage = contactService.searchContact(searchTerm, pageable);
