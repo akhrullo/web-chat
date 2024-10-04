@@ -66,7 +66,16 @@
                 const response = await fetch('/api/v1/chats', {
                     headers: { 'Authorization': `Bearer ${accessToken}` }
                 });
-                if (!response.ok) throw new Error('Failed to load chats');
+                if (response.status === 401) {
+                    // Handle unauthorized access (maybe redirect to login)
+                    console.error('Unauthorized access - redirecting to login');
+                    window.location.href = 'login';
+                    return;
+                }
+
+                if (!response.ok)
+                    throw new Error('Failed to load chats');
+
                 const chats = await response.json();
                 displayChats(chats);
             } catch (error) {

@@ -13,9 +13,9 @@
             <div class="login__area area__wrapper">
                 <h1>WEB CHAT</h1>
                 <p class="header__text">by Akhrullo Ibrokhimov</p>
-                <form id="loginForm" th:action="@{/login}" th:object="${authenticationRequest}" method="post">
-                    <input type="text" th:field="*{email}" placeholder="Email" required />
-                    <input type="password" th:field="*{password}" placeholder="Password" required />
+                <form id="loginForm" method="post">
+                    <input id="email" type="text" placeholder="Email" required />
+                    <input id="password" type="password" placeholder="Password" required />
                     <button type="submit">Proceed</button>
                     <p>
                         Don't have an account yet?
