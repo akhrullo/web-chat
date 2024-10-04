@@ -18,4 +18,6 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
     boolean existsByOwnerAndUser(User owner, User user);
 
     Optional<Contact> findByIdAndOwner(Long id, User owner);
+
+    Optional<Contact> findByUserAndOwner(User user, User owner);
 }

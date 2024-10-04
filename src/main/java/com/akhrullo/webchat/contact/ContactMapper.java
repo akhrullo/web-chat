@@ -14,8 +14,8 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface ContactMapper {
 
     @Mapping(target = "ownerId", source = "owner.id")
-//    @Mapping(target = "userId", source = "user.id")
-//    @Mapping(target = "email", source = "user.email")
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "email", source = "user.email")
     ContactDto toDto(Contact contact);
 
     @Mapping(target = "id", ignore = true)

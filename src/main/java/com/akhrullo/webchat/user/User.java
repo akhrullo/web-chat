@@ -15,8 +15,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.Builder;
+import lombok.Setter;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 

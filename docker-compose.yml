@@ -1,23 +1,28 @@
-version: '3.8'
-
+name: web-chat
 services:
   db:
-    image: postgres:15
     container_name: postgres-db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: webchat
-    ports:
-      - "52432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    image: postgres:15
     networks:
-      - postgres-network
-
+      postgres-network: null
+    ports:
+      - mode: ingress
+        target: 5432
+        published: "52432"
+        protocol: tcp
+    volumes:
+      - type: volume
+        source: postgres-data
+        target: /var/lib/postgresql/data
+        volume: {}
 networks:
   postgres-network:
+    name: web-chat_postgres-network
     driver: bridge
-
 volumes:
   postgres-data:
+    name: web-chat_postgres-data

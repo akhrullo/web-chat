@@ -49,39 +49,50 @@ public class MessageServiceImpl implements MessageService {
         }
 
         Message message = messageMapper.toEntity(messageDto, chat, user);
-        String encryptMessage = encryptionService.encryptMessageForUser(messageDto.getContent(), receiver);
-        message.setContent(encryptMessage);
+        String encryptedContent = encryptionService.encryptMessageForUser(messageDto.getContent(), receiver);
+        message.setContent(encryptedContent);
 
         Message savedMessage = messageRepository.save(message);
 
         // Trigger the event after the message is saved
         eventPublisher.publishEvent(new MessageSentEvent(this, savedMessage));
 
-        return messageMapper.toDto(savedMessage);
+        return covertToMessageDto(savedMessage);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<MessageDto> getMessagesByChat(Long chatId, Pageable pageable) {
         return messageRepository.findByChatId(chatId, pageable)
-                .map(message -> {
-                    MessageDto dto = messageMapper.toDto(message);
-                    dto.setContent(encryptionService.decryptMessageForUser(dto.getContent(), SessionContext.getCurrentUser()));
-                    return dto;
-                });
+                .map(this::covertToMessageDto);
     }
 
     @Override
     public void markMessagesAsRead(Long chatId) {
         User user = SessionContext.getCurrentUser();
-        Chat chat = chatService.findChatById(chatId);
-        User receiver = chat.getUsers().stream()
-                .filter(e -> !e.equals(user))
-                .findFirst()
-                .orElseThrow(WebChatApiException::receiverNotFound);
+        User receiver = getReceiverOfChat(chatId, user);
 
         List<Message> messages = messageRepository.findUnreadMessagesByChatIdAndUserId(chatId, receiver.getId());
         messages.forEach(message -> message.setRead(true));
         messageRepository.saveAll(messages);
+    }
+
+    private MessageDto covertToMessageDto(Message message) {
+        MessageDto dto = messageMapper.toDto(message);
+        User currentUser = SessionContext.getCurrentUser();
+        User receiver = getReceiverOfChat(message.getChat().getId(), currentUser);
+        boolean isSent = message.getSender().getId().equals(currentUser.getId());
+
+        dto.setSent(isSent);
+        dto.setContent(encryptionService.decryptMessageForUser(dto.getContent(), isSent ? currentUser : receiver));
+        return dto;
+    }
+
+    private User getReceiverOfChat(Long chatId, User user) {
+        Chat chat = chatService.findChatById(chatId);
+        return chat.getUsers().stream()
+                .filter(e -> !e.equals(user))
+                .findFirst()
+                .orElseThrow(WebChatApiException::receiverNotFound);
     }
 }

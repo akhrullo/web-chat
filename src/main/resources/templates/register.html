@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login page</title>
+    <link rel="stylesheet" th:href="@{/main.css}" />
+</head>
+<body>
+<div id="root">
+<div class="app">
+    <div class="signup auth__wrapper">
+        <div class="signup__area area__wrapper">
+            <h1>WEB CHAT</h1>
+            <p class="header__text">by Akhrullo Ibrokhimov</p>
+            <form id="registrationForm" method="POST" novalidate>
+                <input id="email" type="email" name = "email" placeholder="Email" required aria-required="true" />
+                <input id="password" type="password" name = "password" placeholder="Password" required aria-required="true" />
+                <input id="firstname" type="text" name = "firstname" placeholder="Firstname" required aria-required="true" />
+                <input id="lastname" type="text" name = "lastname" placeholder="Lastname" />
+                <button type="submit">Proceed</button>
+            </form>
+            <strong class="error__msg" id="errorMessage"></strong>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+<script>
+    document.getElementById('registrationForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const firstname = document.getElementById('firstname').value.trim();
+        const lastname = document.getElementById('lastname').value.trim();
+
+        try {
+            const response = await fetch('/api/v1/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, firstname, lastname})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('accessToken', data.access_token); // Store the token
+                window.location.href = 'login'; // Redirect to main chat page
+            } else {
+                const errorData = await response.json();
+                document.getElementById('errorMessage').textContent = errorData.message || 'Registration failed';
+            }
+        } catch (error) {
+            console.error('Error during registration:', error);
+            document.getElementById('errorMessage').textContent = 'An error occurred. Please try again.';
+        }
+    });
+</script>
+</html>

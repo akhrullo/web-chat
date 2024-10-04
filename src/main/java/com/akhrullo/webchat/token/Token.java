@@ -48,7 +48,7 @@ public class Token {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TokenType tokenType = TokenType.BEARER;
+    private TokenType tokenType;
 
     @Column(nullable = false)
     private boolean revoked;

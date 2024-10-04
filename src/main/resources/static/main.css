@@ -1,0 +1,377 @@
+.app {
+    width: 100vw;
+    height: 100vh;
+    margin: -2rem -3rem;
+}
+.auth__wrapper {
+    height: 105vh;
+    display: flex;
+    place-items: center;
+    justify-content: center;
+    background-color: #023047;
+    color: black;
+}
+input,
+textarea {
+    border-radius: 0.75rem;
+    padding: 0.8rem;
+    border: 1px solid #dadada;
+    outline: none;
+}
+.auth__wrapper .area__wrapper {
+    background-color: #f1faee;
+    text-align: center;
+    padding: 5rem 3rem;
+    width: 25rem;
+    min-height: 15rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+.auth__wrapper .area__wrapper > form {
+    display: flex;
+    flex-flow: row wrap;
+}
+.error__msg {
+    margin: 0 1rem;
+    font-size: 0.75rem;
+    color: #a90b0b;
+}
+.login__area h1 {
+    margin: 0;
+}
+.login__area > p {
+    margin: 0;
+    color: gray;
+    font-weight: 500;
+}
+.login__area > form {
+    margin-top: 2rem;
+}
+.login__area > form input {
+    margin: 0.35rem 0;
+    width: calc(100% - 2rem);
+}
+.login__area form p {
+    margin: 1rem auto;
+    font-size: 0.9rem;
+}
+.login__area .signup__link {
+    cursor: pointer;
+    margin: 0.25rem;
+    font-weight: 600;
+    -webkit-transition: .25s ease-out;
+    -moz-transition: .25s ease-out;
+    -ms-transition: .25s ease-out;
+    -o-transition: .25s ease-out;
+    transition: .25s ease-out;
+}
+.login__area .signup__link:hover {
+    color: #219ebc;
+}
+
+.login__area button {
+    background: linear-gradient(45deg, #219ebc, #0a618d);
+    border: none;
+    color: white;
+    width: 80%;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 0 auto;
+    margin-top: 1rem;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.login__area button:hover {
+    background: linear-gradient(45deg, #023047, #219ebc);
+    transform: translateY(-2px);
+}
+
+.login__area button:active {
+    transform: translateY(1px);
+}
+
+.signup__area {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 60%;
+}
+
+.signup__area form input {
+    margin: 0.35rem 0;
+    width: calc(100% - 2rem);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.signup__area button {
+    background: linear-gradient(45deg, #219ebc, #023047);
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 1rem;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.signup__area button:hover {
+    background: linear-gradient(45deg, #023047, #219ebc);
+    transform: translateY(-2px);
+}
+
+.signup__area button:active {
+    transform: translateY(1px);
+}
+
+.error__msg {
+    color: red;
+    margin-top: 10px;
+}
+
+/* Global styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #023047;
+    color: #fff;
+}
+
+#root {
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Main app container */
+.app__container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+/* Sidebar - Left */
+.sidebar {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #035279;
+    background-color: #023047;
+}
+
+.sidebar__header {
+    padding: 1.5rem;
+    background-color: #219ebc;
+    color: white;
+    font-size: 1.2rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.contacts__list {
+    flex-grow: 1;
+    padding: 0.5rem;
+    overflow-y: auto;
+}
+
+.contact__item {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    border-bottom: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #eadbdb;
+}
+
+.contact__item:hover {
+    background-color: #219ebc;
+    color: #fff;
+}
+
+.contact__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;  /* Ensures initials are readable */
+    margin-right: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Adds a slight shadow for better appearance */
+}
+
+
+.contact__name {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* Chat section */
+.chat__section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #f1faee;
+}
+
+.chat__header {
+    padding: 1.5rem;
+    background-color: #219ebc;
+    color: white;
+    font-size: 1.2rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.messages__area {
+    flex-grow: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    border-radius: 0.75rem;
+    max-width: 60%;
+}
+
+.message--sent {
+    align-self: flex-end;
+    background-color: #219ebc;
+    color: white;
+}
+
+.message--received {
+    align-self: flex-start;
+    background-color: #023047;
+    color: #f1faee;
+}
+
+/* Input area */
+.input__area {
+    padding: 1rem;
+    display: flex;
+    background-color: #f1faee;
+}
+
+.input__field {
+    flex-grow: 1;
+    padding: 0.8rem;
+    border-radius: 0.75rem;
+    border: 1px solid #dadada;
+    outline: none;
+    margin-right: 1rem;
+}
+
+.send__button {
+    background: linear-gradient(45deg, #219ebc, #0a618d);
+    border: none;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.send__button:hover {
+    background: linear-gradient(45deg, #023047, #219ebc);
+    transform: translateY(-2px);
+}
+
+.send__button:active {
+    transform: translateY(1px);
+}
+
+/* Right Sidebar */
+.right-sidebar {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    background-color: #023047;
+    color: white;
+    border-left: 1px solid #035279;
+}
+
+.right-sidebar__header {
+    padding: 1.5rem;
+    background-color: #219ebc;
+    font-size: 1.2rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.contact__details {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.contact__details-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem; /* Larger font for bigger avatar */
+    font-weight: bold;
+    color: white;  /* Ensures initials are readable */
+    margin-bottom: 1rem;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
+}
+
+.contact__details-name {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.contact__buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.contact__button {
+    padding: 0.75rem 2rem;
+    margin: 0.5rem 0;
+    background-color: #219ebc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-weight: bold;
+    display: none;
+}
+
+.contact__button:hover {
+    background-color: #0a618d;
+}
+

@@ -2,6 +2,7 @@ package com.akhrullo.webchat.contact;
 
 import com.akhrullo.webchat.contact.dto.ContactCreateDto;
 import com.akhrullo.webchat.contact.dto.ContactDto;
+import com.akhrullo.webchat.contact.dto.ContactUpdateDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,8 +72,20 @@ public class ContactController {
      * @return ResponseEntity with the ContactDto and HTTP status 200 OK
      */
     @GetMapping("/{contactId}")
-    public ResponseEntity<ContactDto> getContactProfile(@PathVariable Long contactId) {
+    public ResponseEntity<ContactDto> getContactProfile(@PathVariable("contactId") Long contactId) {
         ContactDto contactDto = contactService.getContactProfile(contactId);
+        return ResponseEntity.ok(contactDto);
+    }
+
+    /**
+     * Updates a contact by ID.
+     *
+     * @param contactId the ID of the contact to update
+     * @return ResponseEntity with HTTP status 204 No Content
+     */
+    @PutMapping("/{contactId}")
+    public ResponseEntity<ContactDto> updateContact(@PathVariable("contactId") Long contactId, @Valid @RequestBody ContactUpdateDto updateDto) {
+        ContactDto contactDto = contactService.updateContact(contactId, updateDto);
         return ResponseEntity.ok(contactDto);
     }
 
@@ -82,7 +96,7 @@ public class ContactController {
      * @return ResponseEntity with HTTP status 204 No Content
      */
     @DeleteMapping("/{contactId}")
-    public ResponseEntity<Void> deleteContact(@PathVariable Long contactId) {
+    public ResponseEntity<Void> deleteContact(@PathVariable("contactId") Long contactId) {
         contactService.deleteContact(contactId);
         return ResponseEntity.noContent().build();
     }

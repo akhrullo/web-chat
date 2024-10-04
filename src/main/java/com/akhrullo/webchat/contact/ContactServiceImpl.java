@@ -3,6 +3,7 @@ package com.akhrullo.webchat.contact;
 import com.akhrullo.webchat.config.SessionContext;
 import com.akhrullo.webchat.contact.dto.ContactCreateDto;
 import com.akhrullo.webchat.contact.dto.ContactDto;
+import com.akhrullo.webchat.contact.dto.ContactUpdateDto;
 import com.akhrullo.webchat.user.User;
 import com.akhrullo.webchat.exception.WebChatApiException;
 import com.akhrullo.webchat.user.UserService;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 
 /**
@@ -50,6 +53,24 @@ public class ContactServiceImpl implements ContactService {
         );
 
         return contactPage.map(mapper::toDto);
+    }
+
+    @Override
+    public Optional<ContactDto> getByUser(User user) {
+        return repository.findByUserAndOwner(user, SessionContext.getCurrentUser())
+                .map(mapper::toDto);
+    }
+
+    @Override
+    public ContactDto updateContact(Long contactId, ContactUpdateDto updateDto) {
+        User owner = SessionContext.getCurrentUser();
+        Contact contact = repository.findByIdAndOwner(contactId, owner)
+                .orElseThrow(WebChatApiException::contactNotFoundException);
+
+        contact.setName(updateDto.getName());
+        repository.save(contact);
+
+        return mapper.toDto(contact);
     }
 
     @Override

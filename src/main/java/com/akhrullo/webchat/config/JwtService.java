@@ -1,5 +1,6 @@
 package com.akhrullo.webchat.config;
 
+import com.akhrullo.webchat.config.properties.JwtProperties;
 import com.akhrullo.webchat.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -12,23 +13,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 /**
- * Class {@code } presents ...
+ * Service class for handling JWT-related operations.
  *
  * @author Akhrullo Ibrokhimov
  * @version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class JwtService {
-    @Value("${application.security.jwt.secret-key}")
-    private String secretKey;
-    @Value("${application.security.jwt.expiration}")
-    private long jwtExpiration;
-    @Value("${application.security.jwt.refresh-token.expiration}")
-    private long refreshExpiration;
+    private final JwtProperties jwtProperties;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -47,13 +44,13 @@ public class JwtService {
             Map<String, Object> extraClaims,
             User user
     ) {
-        return buildToken(extraClaims, getUserDetails(user), jwtExpiration);
+        return buildToken(extraClaims, getUserDetails(user), jwtProperties.getExpiration());
     }
 
     public String generateRefreshToken(
             User user
     ) {
-        return buildToken(new HashMap<>(), getUserDetails(user), refreshExpiration);
+        return buildToken(new HashMap<>(), getUserDetails(user), jwtProperties.getRefreshTokenExpiration());
     }
 
     private String buildToken(
@@ -94,7 +91,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecretKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
