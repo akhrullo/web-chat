@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
@@ -31,11 +29,5 @@ public class ContactUpdateDto {
     @NotBlank(message = "Contact name must not be blank")
     @Size(min = 2, max = 100, message = "Contact name must be between 2 and 100 characters")
     private String name;
-
-    /**
-     * The ID of the user associated with the contact.
-     */
-    @NotNull(message = "User ID must not be null")
-    private Long userId;
 }
 

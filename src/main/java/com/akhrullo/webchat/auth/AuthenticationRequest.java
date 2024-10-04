@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Class {@code } presents ...
+ * Request DTO representing the authentication request with user credentials.
  *
  * @author Akhrullo Ibrokhimov
  * @version 1.0
@@ -20,8 +20,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AuthenticationRequest {
+    /**
+     * The user's email address.
+     * Must be a valid email format.
+     */
     @Email
     private String email;
+
+    /**
+     * The user's password.
+     * Cannot be blank.
+     */
     @NotBlank
     private String password;
 }

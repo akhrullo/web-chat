@@ -20,7 +20,7 @@ public interface ChatService {
 
     ChatDto getChatById(Long chatId);
 
-    List<ChatDto> getAllChats();
+    List<ChatDto>  getAllChats();
 
     List<UserDto> getChatUsers(Long chatId);
 }

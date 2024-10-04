@@ -1,5 +1,8 @@
 package com.akhrullo.webchat.message.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +20,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MessageDto {
 
     private Long id;
@@ -30,4 +35,6 @@ public class MessageDto {
     private Long chatId;
 
     private boolean isRead;
+
+    private boolean isSent;
 }
