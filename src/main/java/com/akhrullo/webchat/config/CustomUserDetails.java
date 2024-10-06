@@ -2,7 +2,6 @@ package com.akhrullo.webchat.config;
 
 import com.akhrullo.webchat.common.UserState;
 import com.akhrullo.webchat.user.User;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +10,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Class {@code } presents ...
+ * Represents the details of a user for Spring Security authentication.
+ *
+ * <p>Provides methods to access user information and authorities.</p>
  *
  * @author Akhrullo Ibrokhimov
  * @version 1.0
