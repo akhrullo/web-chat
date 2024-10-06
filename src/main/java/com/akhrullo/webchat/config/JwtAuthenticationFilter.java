@@ -3,9 +3,11 @@ package com.akhrullo.webchat.config;
 import com.akhrullo.webchat.token.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * JwtAuthenticationFilter filters incoming requests to validate JWT tokens.
@@ -34,6 +37,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
     private final UserDetailsService userDetailsService;
 
+    @Value("${auth.with-cookies}")
+    private boolean authWithCookies;
+
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -45,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        final String jwt = extractJwtToken(request);
+        final String jwt = authWithCookies ? extractTokenFromCookies(request) : extractJwtToken(request);
         if (jwt != null) {
             authenticateRequest(jwt, request);
         }
@@ -63,6 +69,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return authHeader.substring(BEARER_PREFIX.length());
         }
         return null;
+    }
+
+    private String extractTokenFromCookies(HttpServletRequest request) {
+        if (request.getCookies() == null) {
+            return null;
+        }
+
+        return Arrays.stream(request.getCookies())
+                .filter(cookie -> "accessToken".equals(cookie.getName()))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElse(null);
     }
 
     private void authenticateRequest(String jwt, HttpServletRequest request) {
@@ -87,11 +105,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
-        // Assuming userDetails is of type CustomUserDetails
         if (userDetails instanceof CustomUserDetails customUserDetails) {
             // Set user and any additional information into ThreadLocal
             SessionContext.setCurrentUser(customUserDetails.user());
-            // You can also set the language or any other session information here
             String lang = request.getHeader("Accept-Language");
             SessionContext.setCurrentLanguage(lang);
         }

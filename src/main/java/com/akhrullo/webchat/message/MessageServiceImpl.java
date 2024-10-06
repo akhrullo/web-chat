@@ -9,7 +9,6 @@ import com.akhrullo.webchat.message.dto.CreateMessageDto;
 import com.akhrullo.webchat.message.dto.MessageDto;
 import com.akhrullo.webchat.message.event.MessageSentEvent;
 import com.akhrullo.webchat.user.User;
-import com.akhrullo.webchat.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -31,7 +30,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
     private final ChatService chatService;
-    private final UserService userService;
     private final MessageMapper messageMapper;
     private final MessageRepository messageRepository;
     private final ApplicationEventPublisher eventPublisher;
@@ -41,7 +39,7 @@ public class MessageServiceImpl implements MessageService {
     public MessageDto sendMessage(CreateMessageDto messageDto) {
         User user = SessionContext.getCurrentUser();
         Chat chat = chatService.findChatById(messageDto.getChatId());
-        User receiver = userService.findUserById(messageDto.getReceiverId());
+        User receiver = getReceiverOfChat(chat.getId(), user);
 
         if (user.getId().equals(messageDto.getReceiverId())) {
             log.warn("User {} is trying to send a message to themselves. Ignoring.", user.getId());
