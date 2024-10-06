@@ -1,7 +1,7 @@
 package com.akhrullo.webchat.config;
 
-import com.akhrullo.webchat.token.Token;
-import com.akhrullo.webchat.token.TokenRepository;
+import com.akhrullo.webchat.token.TokenService;
+import com.akhrullo.webchat.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class LogoutService implements LogoutHandler {
-    private final TokenRepository tokenRepository;
+    private final TokenService tokenService;
     private static final String BEARER_PREFIX = "Bearer ";
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
@@ -43,9 +43,9 @@ public class LogoutService implements LogoutHandler {
             return;
         }
 
-        final String jwt = authHeader.substring(BEARER_PREFIX.length());
-        tokenRepository.findByToken(jwt)
-                .ifPresentOrElse(this::revokeToken, SecurityContextHolder::clearContext);
+        tokenService.revokeAllUserTokens((User) authentication.getPrincipal());
+
+        SecurityContextHolder.clearContext();
 
         // Clear ThreadLocal session data
         SessionContext.clear();
@@ -53,12 +53,5 @@ public class LogoutService implements LogoutHandler {
 
     private boolean isBearerToken(String authHeader) {
         return authHeader != null && authHeader.startsWith(BEARER_PREFIX);
-    }
-
-    private void revokeToken(Token storedToken) {
-        storedToken.setExpired(true);
-        storedToken.setRevoked(true);
-        tokenRepository.save(storedToken);
-        SecurityContextHolder.clearContext();
     }
 }

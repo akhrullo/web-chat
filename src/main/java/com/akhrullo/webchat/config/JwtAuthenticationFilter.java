@@ -1,6 +1,6 @@
 package com.akhrullo.webchat.config;
 
-import com.akhrullo.webchat.token.TokenRepository;
+import com.akhrullo.webchat.token.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
     private final JwtService jwtService;
-    private final TokenRepository tokenRepository;
+    private final TokenService tokenService;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -76,11 +76,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isTokenValid(String jwt, UserDetails userDetails) {
-        boolean isTokenFromRepoValid = tokenRepository.findByToken(jwt)
-                .map(token -> !token.isExpired() && !token.isRevoked())
-                .orElse(false);
-
-        return jwtService.isTokenValid(jwt, userDetails) && isTokenFromRepoValid;
+        boolean isStoredTokenActive = tokenService.isTokenValid(jwt);
+        return jwtService.isTokenValid(jwt, userDetails) && isStoredTokenActive;
     }
 
     private void setAuthentication(UserDetails userDetails, HttpServletRequest request) {
