@@ -19,6 +19,12 @@
                 <input id="firstname" type="text" name = "firstname" placeholder="Firstname" required aria-required="true" />
                 <input id="lastname" type="text" name = "lastname" placeholder="Lastname" />
                 <button type="submit">Proceed</button>
+                <p>
+                    Do you have an account?
+                    <a href="login" class="login__link header__text">
+                        Login here
+                    </a>
+                </p>
             </form>
             <strong class="error__msg" id="errorMessage"></strong>
         </div>
@@ -43,9 +49,7 @@
             });
 
             if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem('accessToken', data.access_token); // Store the token
-                window.location.href = 'login'; // Redirect to main chat page
+                window.location.href = 'login'; // Redirect to login page
             } else {
                 const errorData = await response.json();
                 document.getElementById('errorMessage').textContent = errorData.message || 'Registration failed';

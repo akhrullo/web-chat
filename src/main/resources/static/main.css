@@ -93,6 +93,38 @@ textarea {
     transform: translateY(1px);
 }
 
+.google-signin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    /*background-color: #4285F4; !* Google Blue *!*/
+    /*color: white;*/
+    text-decoration: none; /* Remove underline */
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);*/
+}
+
+.google-signin:hover {
+    background: linear-gradient(45deg, #219ebc, #0a618d);
+    color: #ffffff;
+}
+
+.google-logo {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px; /* Space between logo and text */
+}
+
+.google-signin:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.5); /* Focus ring for accessibility */
+}
+
 .signup__area {
     background: white;
     padding: 2rem;
@@ -109,6 +141,24 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
+}
+
+.signup__area form p {
+    margin: 1rem auto;
+    font-size: 0.9rem;
+}
+.signup__area .login__link {
+    cursor: pointer;
+    margin: 0.25rem;
+    font-weight: 600;
+    -webkit-transition: .25s ease-out;
+    -moz-transition: .25s ease-out;
+    -ms-transition: .25s ease-out;
+    -o-transition: .25s ease-out;
+    transition: .25s ease-out;
+}
+.signup__area .login__link:hover {
+    color: #219ebc;
 }
 
 .signup__area button {
