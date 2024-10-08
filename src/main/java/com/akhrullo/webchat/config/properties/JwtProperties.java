@@ -27,7 +27,7 @@ public class JwtProperties {
     private Long expiration;
 
     /**
-     * Properties related to refresh tokens.
+     * The expiration time for the refresh token in milliseconds.
      */
     private Long refreshTokenExpiration;
 }

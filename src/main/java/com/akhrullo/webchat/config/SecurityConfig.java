@@ -1,5 +1,7 @@
 package com.akhrullo.webchat.config;
 
+import com.akhrullo.webchat.auth.oauth.CustomOAuth2SuccessHandler;
+import com.akhrullo.webchat.auth.oauth.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +29,9 @@ public class SecurityConfig {
     private final LogoutHandler logoutHandler;
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final CustomOAuth2UserService oAuth2UserService;
+    private final CustomOAuth2SuccessHandler oAuth2SuccessHandler;
+
     private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**",
             "/v2/api-docs",
             "/v3/api-docs",
@@ -68,6 +73,11 @@ public class SecurityConfig {
                                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                                     response.getWriter().write("Access denied");
                                 })
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+                        .successHandler(oAuth2SuccessHandler)
                 )
                 .logout(logout ->
                         logout.logoutUrl("/api/v1/auth/logout")

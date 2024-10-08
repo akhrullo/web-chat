@@ -24,6 +24,10 @@
                         </a>
                     </p>
                 </form>
+                <a href="/oauth2/authorization/google" class="google-signin">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo" class="google-logo">
+                    Sign in with Google
+                </a>
                 <strong class="error__msg" id="errorMessage"></strong>
             </div>
         </div>
@@ -44,8 +48,6 @@
             });
 
             if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem('accessToken', data.access_token); // Store the token
                 window.location.href = 'chat'; // Redirect to main chat page
             } else {
                 const errorData = await response.json();

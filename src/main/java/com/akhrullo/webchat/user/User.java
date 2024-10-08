@@ -22,6 +22,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -69,4 +70,19 @@ public class User extends AuditingEntity {
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     private Set<Contact> contacts = new HashSet<>();  // Contacts owned by the user
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof User))
+            return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

@@ -1,5 +1,6 @@
 package com.akhrullo.webchat.auth;
 
+import com.akhrullo.webchat.session.CookieManagementService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService service;
+    private final CookieManagementService cookieManagementService;
 
     /**
      * Registers a new user with the provided registration details.
@@ -39,14 +41,21 @@ public class AuthenticationController {
     /**
      * Authenticates an existing user with the provided credentials.
      *
-     * @param request the authentication request containing username and password.
+     * @param request  the authentication request containing username and password.
+     * @param response the HTTP response to write the cookies.
      * @return a response entity containing the authentication response (e.g., JWT token).
      */
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @Valid @RequestBody AuthenticationRequest request
+            @Valid @RequestBody AuthenticationRequest request,
+            HttpServletResponse response
     ) {
-        return ResponseEntity.ok(service.authenticate(request));
+        AuthenticationResponse authenticationResponse = service.authenticate(request);
+
+        cookieManagementService.setAccessTokenCookie(response, authenticationResponse.getAccessToken());
+        cookieManagementService.setRefreshTokenCookie(response, authenticationResponse.getRefreshToken());
+
+        return ResponseEntity.ok(authenticationResponse);
     }
 
     /**
