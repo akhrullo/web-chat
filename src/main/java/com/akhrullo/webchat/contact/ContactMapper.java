@@ -13,14 +13,15 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface ContactMapper {
 
-//    @Mapping(target = "ownerId", source = "contact.owner.id")
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "email", source = "user.email")
+    @Mapping(target = "ownerId", source = "contact.owner.id")
     ContactDto toDto(Contact contact);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "version", ignore = true)
+    @Mapping(target = "updatedTime", ignore = true)
     @Mapping(target = "owner", source = "owner")
-//    @Mapping(target = "user", source = "user")
+    @Mapping(target = "user", source = "user")
     Contact toEntity(ContactCreateDto createDto, User owner, User user);
 }
