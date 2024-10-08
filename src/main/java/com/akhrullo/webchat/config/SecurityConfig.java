@@ -32,7 +32,9 @@ public class SecurityConfig {
     private final CustomOAuth2UserService oAuth2UserService;
     private final CustomOAuth2SuccessHandler oAuth2SuccessHandler;
 
-    private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**",
+    private static final String[] WHITE_LIST_URL = {
+            "/api/v1/auth/**",
+            "/actuator/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
