@@ -33,7 +33,9 @@ public interface ChatMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "name", ignore = true)
     @Mapping(target = "image", ignore = true)
+    @Mapping(target = "version", ignore = true)
     @Mapping(target = "messages", ignore = true)
+    @Mapping(target = "updatedTime", ignore = true)
     @Mapping(target = "type", constant = "PRIVATE")
     @Mapping(target = "users", expression = "java(java.util.List.of(user, partner))")
     Chat toPrivateChat(User user, User partner);

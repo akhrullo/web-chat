@@ -12,9 +12,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 /**
  * The {@code Message} class represents a message entity in the chat application.
@@ -51,4 +54,9 @@ public class Message extends AuditingEntity {
 
     @Version
     private Long version;
+
+    @PrePersist
+    public void updateChatTime() {
+        this.chat.setUpdatedTime(LocalDateTime.now());
+    }
 }
