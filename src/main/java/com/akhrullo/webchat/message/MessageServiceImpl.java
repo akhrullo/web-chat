@@ -41,7 +41,7 @@ public class MessageServiceImpl implements MessageService {
         Chat chat = chatService.findChatById(messageDto.getChatId());
         User receiver = getReceiverOfChat(chat.getId(), user);
 
-        if (user.getId().equals(messageDto.getReceiverId())) {
+        if (user.equals(receiver)) {
             log.warn("User {} is trying to send a message to themselves. Ignoring.", user.getId());
             throw WebChatApiException.selfMessageNotAllowed();
         }
