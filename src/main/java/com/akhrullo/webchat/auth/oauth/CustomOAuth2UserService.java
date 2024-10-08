@@ -60,6 +60,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         return userRepository.save(existingUser);
     }
 
+    // TODO extract to UserService
     private User registerNewUser(String email, String firstname, String lastname) {
         User user = User.builder()
                 .firstname(firstname)

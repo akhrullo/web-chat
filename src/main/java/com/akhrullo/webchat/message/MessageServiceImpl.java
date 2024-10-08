@@ -82,7 +82,7 @@ public class MessageServiceImpl implements MessageService {
         boolean isSent = message.getSender().getId().equals(currentUser.getId());
 
         dto.setSent(isSent);
-        dto.setContent(encryptionService.decryptMessageForUser(dto.getContent(), isSent ? currentUser : receiver));
+        dto.setContent(encryptionService.decryptMessageForUser(dto.getContent(), isSent ? receiver : currentUser));
         return dto;
     }
 
