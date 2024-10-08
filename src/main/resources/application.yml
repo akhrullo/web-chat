@@ -37,7 +37,32 @@ spring:
     suffix: .html
     mode: HTML
     cache: false
-
+management:
+  info:
+    java:
+      enabled: true
+    git:
+      enabled: true
+      mode: full
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
 application:
   security:
     jwt:
