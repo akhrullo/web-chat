@@ -384,6 +384,26 @@ body, html {
     background-color: #023047;
     color: #f1faee;
 }
+.message-media {
+    display: block;
+    margin: 0 auto; /* Center media */
+    border-radius: 8px; /* Rounded corners for images/videos */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
+}
+
+.message__attachment {
+    margin-bottom: 3px;
+}
+
+.attachment__link {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.message__caption {
+    /*font-size: 0.9em;*/
+    /*color: #fff;*/
+}
 
 /* Input area */
 .input__area {
@@ -398,7 +418,7 @@ body, html {
     border-radius: 0.75rem;
     border: 1px solid #dadada;
     outline: none;
-    margin-right: 1rem;
+    margin-right: -2.5rem;
 }
 
 .send__button {
@@ -411,6 +431,7 @@ body, html {
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.3s ease;
+    margin-left: 10px;
 }
 
 .send__button:hover {
@@ -421,7 +442,17 @@ body, html {
 .send__button:active {
     transform: translateY(1px);
 }
+.send__button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
 
+.sticker__button {
+    padding: 10px;
+    background-color: transparent; /* Transparent button */
+    border: none;
+    cursor: pointer; /* Pointer cursor */
+    font-size: 20px; /* Larger font for sticker */
+}
 /* Right Sidebar */
 .right-sidebar {
     width: 20%;

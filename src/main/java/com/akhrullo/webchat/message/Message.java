@@ -40,7 +40,8 @@ public class Message extends AuditingEntity {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    private String image;
+    @Column(name = "attachment_id")
+    private Long attachmentId;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", nullable = false)

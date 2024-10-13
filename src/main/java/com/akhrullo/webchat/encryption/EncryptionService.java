@@ -16,7 +16,7 @@ import java.security.PublicKey;
 import java.util.Base64;
 
 /**
- * Service to handle message encryption and decryption using hybrid cryptography
+ * Service to handle encryption and decryption using hybrid cryptography
  * (AES for message encryption, RSA for key encryption).
  *
  * @author Akhrullo Ibrokhimov
@@ -25,7 +25,7 @@ import java.util.Base64;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MessageEncryptionService {
+public class EncryptionService {
 
     private final KeyManagementService keyManagementService;
     private static final String AES_ALGORITHM = "AES";
@@ -49,13 +49,13 @@ public class MessageEncryptionService {
     }
 
     /**
-     * Encrypts a message using AES-256 symmetric encryption.
+     * Encrypts a String argument using AES-256 symmetric encryption.
      *
      * @param message The plaintext message to encrypt.
      * @param aesKey The AES key used for encryption.
      * @return Encrypted message as a Base64-encoded string.
      */
-    public String encryptMessageWithAes(String message, SecretKey aesKey) {
+    public String encryptWithAes(String message, SecretKey aesKey) {
         try {
             Cipher cipher = Cipher.getInstance(AES_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, aesKey);
@@ -68,13 +68,13 @@ public class MessageEncryptionService {
     }
 
     /**
-     * Decrypts a message using AES-256 symmetric decryption.
+     * Decrypts a String argument using AES-256 symmetric decryption.
      *
      * @param encryptedMessage The Base64-encoded encrypted message.
      * @param aesKey The AES key used for decryption.
      * @return The decrypted plaintext message.
      */
-    public String decryptMessageWithAes(String encryptedMessage, SecretKey aesKey) {
+    public String decryptWithAes(String encryptedMessage, SecretKey aesKey) {
         try {
             Cipher cipher = Cipher.getInstance(AES_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, aesKey);
@@ -132,12 +132,12 @@ public class MessageEncryptionService {
      * @param recipient The user who will receive the encrypted message.
      * @return A combined string containing the encrypted AES key and the encrypted message.
      */
-    public String encryptMessageForUser(String message, User recipient) {
+    public String encryptForUser(String message, User recipient) {
         // Generate a new AES-256 key for this message
         SecretKey aesKey = generateAesKey();
 
         // Encrypt the message using AES-256
-        String encryptedMessage = encryptMessageWithAes(message, aesKey);
+        String encryptedMessage = encryptWithAes(message, aesKey);
 
         // Retrieve the recipient's RSA public key
         PublicKey publicKey = keyManagementService.getPublicKeyForUser(recipient);
@@ -157,7 +157,7 @@ public class MessageEncryptionService {
      * @param recipient The user receiving the message.
      * @return The decrypted plaintext message.
      */
-    public String decryptMessageForUser(String encryptedData, User recipient) {
+    public String decryptForUser(String encryptedData, User recipient) {
         // Split the encrypted data into encrypted AES key and encrypted message
         String[] parts = encryptedData.split(":");
         String encryptedAesKey = parts[0];
@@ -170,6 +170,6 @@ public class MessageEncryptionService {
         SecretKey aesKey = decryptAesKeyWithRsa(encryptedAesKey, privateKey);
 
         // Decrypt the message using the decrypted AES key
-        return decryptMessageWithAes(encryptedMessage, aesKey);
+        return decryptWithAes(encryptedMessage, aesKey);
     }
 }

@@ -35,5 +35,11 @@ public class ExceptionMessageKey {
     /**
      * Keys for exception messages associated with {@link Message}.
      */
+    public static final String MESSAGE_NOT_FOUND = "message.not.found";
     public static final String SELF_MESSAGE_NOT_ALLOWED = "self.message.not.allowed";
+
+    /**
+     * Keys for exception messages associated with {@link com.akhrullo.webchat.attachment.Attachment}.
+     */
+    public static final String ATTACHMENT_NOT_FOUND = "attachment.not.found";
 }
