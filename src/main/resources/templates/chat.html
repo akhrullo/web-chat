@@ -27,6 +27,8 @@
             </div>
             <div class="input__area">
                 <input type="text" class="input__field" id="messageInput" placeholder="Type a message..." />
+                <input type="file" id="fileInput" style="display: none;" />
+                <button class="sticker__button" id="stickerButton">📎</button>
                 <button class="send__button" id="sendButton">Send</button>
             </div>
         </div>
@@ -65,6 +67,15 @@
         document.getElementById('addContactButton').addEventListener('click', addContact);
         document.getElementById('editContactButton').addEventListener('click', editContact);
         document.getElementById('deleteContactButton').addEventListener('click', deleteContact);
+        document.getElementById('stickerButton').addEventListener('click', function() {
+            document.getElementById('fileInput').click(); // Trigger the file input click
+        });
+
+// Optional: Handle the file selection
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const fileName = event.target.files[0]?.name || '';
+            document.getElementById('messageInput').value = fileName ? `Sending: ${fileName}` : ''; // Optional: Update input with file name
+        });
 
         async function loadChats() {
             try {
@@ -180,29 +191,37 @@
 
         async function sendMessage() {
             const messageInput = document.getElementById('messageInput');
+            const fileInput = document.getElementById('fileInput');
             const messageContent = messageInput.value.trim();
             const chatId = getCurrentChatId();
-            const receiverId = getReceiverId();
 
-            if (!chatId || !messageContent) {
-                alert('Please select a contact and enter a message.');
+            if (!chatId || (!messageContent && !fileInput.files.length)) {
+                alert('Please select a contact, enter a message, or choose a file.');
                 return;
             }
+
+            const formData = new FormData();
+            formData.append("message", new Blob([JSON.stringify({
+                chat_id: chatId,
+                content: messageContent
+            })], { type: "application/json" }));
+
+            formData.append("attachment", fileInput.files[0]);
 
             try {
                 const response = await fetch('/api/v1/messages', {
                     method: 'POST',
                     credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({chat_id: chatId, content: messageContent, receiver_id: receiverId})
+                    body: formData
                 });
-                if (!response.ok) throw new Error('Failed to send message');
+
+                if (!response.ok)
+                    throw new Error('Failed to send message');
                 const sentMessage = await response.json();
                 displayMessage(sentMessage);
                 await loadChats();
                 messageInput.value = ''; // Clear input
+                fileInput.value = ''; // Clear file input
             } catch (error) {
                 console.error('Error sending message:', error);
                 handleRequestError();
@@ -321,7 +340,48 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message');
                 messageDiv.classList.add(message.sent ? 'message--sent' : 'message--received');
-                messageDiv.textContent = message.content;
+
+
+                if (message.attachment) {
+                    // If message has an attachment, display it with the content as a caption
+                    const attachmentDiv = document.createElement('div');
+                    attachmentDiv.classList.add('message__attachment');
+
+                    // Assuming the attachment is a downloadable file
+                    if (message.attachment.media) {
+                        const mediaElement = document.createElement(message.attachment.type === 'video' ? 'video' : 'img');
+                        mediaElement.src = `/api/v1/messages/${message.id}/download-attachment`;
+                        mediaElement.classList.add('message-media');
+                        mediaElement.alt = message.content; // Optional: Set alt text to the message content
+                        mediaElement.controls = message.attachment.type === 'video'; // Show controls for video
+
+                        // Set styles for proportional display
+                        mediaElement.style.maxWidth = '300px'; // Responsive width
+                        mediaElement.style.height = 'auto'; // Maintain aspect ratio
+
+                        messageDiv.appendChild(mediaElement);
+                    } else {
+                        // If there is no media, show a download link
+                        const attachmentLink = document.createElement('a');
+                        attachmentLink.href = `/api/v1/messages/${message.id}/download-attachment`;
+                        attachmentLink.textContent = 'Download attachment';
+                        attachmentLink.classList.add('attachment-link');
+                        attachmentLink.download = '';
+                        messageDiv.appendChild(attachmentLink);
+                    }
+                    messageDiv.appendChild(attachmentDiv);
+
+                    // Display the message content as a caption for the attachment
+                    const captionDiv = document.createElement('p');
+                    captionDiv.textContent = message.content;  // Treat content as the caption
+                    captionDiv.classList.add('message__caption');
+                    messageDiv.appendChild(captionDiv);
+
+                } else {
+                    // If no attachment, just display the message content as normal
+                    messageDiv.textContent = message.content;
+                }
+
                 messagesArea.appendChild(messageDiv);
             });
             messagesArea.scrollTop = messagesArea.scrollHeight;
@@ -364,8 +424,46 @@
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message');
             messageDiv.classList.add(message.sent ? 'message--sent' : 'message--received');
-            messageDiv.textContent = message.content;
-            messagesArea.appendChild(messageDiv);
+            if (message.attachment) {
+                // If message has an attachment, display it with the content as a caption
+                const attachmentDiv = document.createElement('div');
+                attachmentDiv.classList.add('message__attachment');
+
+                // Assuming the attachment is a downloadable file
+                if (message.attachment.media) {
+                    const mediaElement = document.createElement(message.attachment.type === 'video' ? 'video' : 'img');
+                    mediaElement.src = `/api/v1/messages/${message.id}/download-attachment`;
+                    mediaElement.classList.add('message-media');
+                    mediaElement.alt = message.content; // Optional: Set alt text to the message content
+                    mediaElement.controls = message.attachment.type === 'video'; // Show controls for video
+
+                    // Set styles for proportional display
+                    mediaElement.style.maxWidth = '300px'; // Responsive width
+                    mediaElement.style.height = 'auto'; // Maintain aspect ratio
+
+                    messageDiv.appendChild(mediaElement);
+                } else {
+                    // If there is no media, show a download link
+                    const attachmentLink = document.createElement('a');
+                    attachmentLink.href = `/api/v1/messages/${message.id}/download-attachment`;
+                    attachmentLink.textContent = 'Download attachment';
+                    attachmentLink.classList.add('attachment-link');
+                    attachmentLink.download = '';
+                    messageDiv.appendChild(attachmentLink);
+                }
+
+                messageDiv.appendChild(attachmentDiv);
+
+                // Display the message content as a caption for the attachment
+                const captionDiv = document.createElement('p');
+                captionDiv.textContent = message.content;  // Treat content as the caption
+                captionDiv.classList.add('message__caption');
+                messageDiv.appendChild(captionDiv);
+
+            } else {
+                // If no attachment, just display the message content as normal
+                messageDiv.textContent = message.content;
+            }            messagesArea.appendChild(messageDiv);
             messagesArea.scrollTop = messagesArea.scrollHeight;
         }
 
@@ -399,6 +497,13 @@
         function getReceiverId() {
             const chatHeader = document.getElementById('chatHeader');
             return chatHeader.getAttribute('receiver-id') || null;
+        }
+
+        function formatFileSize(bytes) {
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            if (bytes === 0) return '0 Bytes';
+            const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+            return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sizes[i]}`;
         }
     });
 </script>

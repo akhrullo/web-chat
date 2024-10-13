@@ -1,5 +1,6 @@
 package com.akhrullo.webchat.message.dto;
 
+import com.akhrullo.webchat.attachment.AttachmentDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -28,8 +29,6 @@ public class MessageDto {
 
     private String content;
 
-    private String image;
-
     private Long senderId;
 
     private Long chatId;
@@ -37,4 +36,6 @@ public class MessageDto {
     private boolean isRead;
 
     private boolean isSent;
+
+    private AttachmentDto attachment;
 }

@@ -25,13 +25,14 @@ public interface MessageMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "updatedTime", ignore = true)
+    @Mapping(target = "attachmentId", ignore = true)
     @Mapping(target = "chat", source = "chat")
     @Mapping(target = "read", constant = "false")
     @Mapping(target = "sender", source = "sender")
-    @Mapping(target = "image", source = "messageDto.image")
     Message toEntity(CreateMessageDto messageDto, Chat chat, User sender);
 
     @Mapping(target = "isSent", ignore = true)
+    @Mapping(target = "attachment", ignore = true)
     @Mapping(target = "isRead", source = "read")
     @Mapping(target = "chatId", source = "chat.id")
     @Mapping(target = "senderId", source = "sender.id")

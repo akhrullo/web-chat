@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Data Transfer Object for creating a new message in the chat application.
@@ -24,11 +25,8 @@ public class CreateMessageDto {
     @NotBlank(message = "Message content cannot be blank")
     private String content;
 
-    private String image;
-
-    @NotNull(message = "Receiver ID cannot be null")
-    private Long receiverId;
-
     @NotNull(message = "Chat ID cannot be null")
     private Long chatId;
+
+    private MultipartFile attachment;
 }
