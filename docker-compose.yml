@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: postgres
     image: postgres:15
     networks:
-      postgres-network: null
+      - web-chat-network
     ports:
       - mode: ingress
         target: 5432
@@ -19,10 +19,41 @@ services:
         source: postgres-data
         target: /var/lib/postgresql/data
         volume: {}
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: web-chat-prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - web-chat-network
+  grafana:
+    container_name: web-chat-grafana
+    image: grafana/grafana:latest
+    ports:
+      - "3065:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - db
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - web-chat-network
+
 networks:
-  postgres-network:
-    name: web-chat_postgres-network
+  web-chat-network:
+    name: web-chat-network
     driver: bridge
 volumes:
   postgres-data:
     name: web-chat_postgres-data
+  grafana-data:
+    name: web-chat_grafana-data
