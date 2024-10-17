@@ -364,7 +364,7 @@
                         // If there is no media, show a download link
                         const attachmentLink = document.createElement('a');
                         attachmentLink.href = `/api/v1/messages/${message.id}/download-attachment`;
-                        attachmentLink.textContent = 'Download attachment';
+                        attachmentLink.textContent = "Download file";
                         attachmentLink.classList.add('attachment-link');
                         attachmentLink.download = '';
                         messageDiv.appendChild(attachmentLink);
