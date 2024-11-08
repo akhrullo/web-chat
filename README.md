@@ -1,6 +1,6 @@
 # Web Chat Application
 
-Web Chat is a secure, distributed real-time messaging platform built to enable seamless communication between users with end-to-end encryption (E2E) for privacy. The application supports user registration, authentication (including Google OAuth), contact management, and live chat functionality. Built with Spring Boot on the backend and React on the frontend, this application adheres to distributed architecture principles to ensure scalability, reliability, and efficient resource utilization.
+Web Chat is a secure, distributed real-time messaging platform built to enable seamless communication between users with end-to-end encryption (E2E) for privacy. The application supports user registration, authentication (including Google OAuth), contact management, and live chat functionality. Built with Spring Boot on the backend and basic frontend with pure JavaScript, this application adheres to distributed architecture principles to ensure scalability, reliability, and efficient resource utilization.
 
 ## Features
 
